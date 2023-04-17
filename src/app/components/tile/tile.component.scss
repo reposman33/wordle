@@ -1,0 +1,35 @@
+.tile {
+    align-items: center;
+    background-color: beige;
+    border: 3px outset yellow;
+    display: flex;
+    font-size: 3rem;
+    font-variant: all-small-caps;
+    justify-content: center;
+    margin: 2px;
+    max-height: 4rem;
+    max-width: 4rem;
+
+    & .locked {
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    & .input[type='text'] {
+        background-color: darkseagreen;
+        color: white;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 4rem;
+        height: 3.5rem;
+        text-align: center;
+        text-transform: capitalize;
+        width: 3.5rem;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 6px;
+        }
+    }
+}

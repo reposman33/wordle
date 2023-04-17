@@ -1,0 +1,10 @@
+.column {
+    align-items: flex-start;
+    background-color: dodgerblue;
+    border: 3px inset lightsteelblue;
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    justify-content: flex-start;
+    margin: 1rem;
+}
