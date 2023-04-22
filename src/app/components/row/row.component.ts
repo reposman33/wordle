@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { WordleService } from 'src/app/services/wordle.service';
 
 @Component({
   selector: 'app-row',
   templateUrl: './row.component.html',
-  styleUrls: ['./row.component.scss']
+  styleUrls: ['./row.component.scss'],
 })
 export class RowComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
