@@ -5,29 +5,44 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class WordleService {
-  activeRow = 0;
-  guessedLetterIndexes: number[] = [];
-  guessResult = '';
-  numberOfCellsPerRow = 5;
-  numberOfRows = 6;
-  wordToGuess = '';
-  words = [
-    'kraal',
-    'appel',
-    'groen',
-    'graag',
-    'greep',
-    'kramp',
-    'aarde',
-    'ander',
-    'ronde',
-  ];
+  activeRow!: number;
+  gameOver!: boolean;
+  guessResult!: string;
+  guessedLetters!: string[];
+  numberOfCellsPerRow!: number;
+  numberOfRows!: number;
+  wordToGuess!: string;
+  words!: string[];
 
   rowSubject = new BehaviorSubject<number>(0);
 
   constructor() {
+    this.initialize();
+  }
+
+  /**
+   * description - initialiseer spel
+   */
+  initialize() {
+    this.words = [
+      'kraal',
+      'appel',
+      'groen',
+      'graag',
+      'greep',
+      'kramp',
+      'aarde',
+      'ander',
+      'ronde',
+    ];
     const randomIndex = Math.floor(Math.random() * this.words.length);
     this.wordToGuess = this.words[randomIndex];
+    this.activeRow = 0;
+    this.guessedLetters = ['', '', '', '', ''];
+    this.guessResult = '';
+    this.gameOver = false;
+    this.numberOfCellsPerRow = 5;
+    this.numberOfRows = 6;
   }
 
   /**
@@ -46,7 +61,7 @@ export class WordleService {
         guessResult = 'goed';
       }
     }
-    this.updateActiveRow(letterIndex);
+    this.checkGame(letterIndex, guessedLetter);
 
     return guessResult;
   }
@@ -55,14 +70,21 @@ export class WordleService {
    * - description: voedt de BehaviourSubject met nieuwe waarde. Column component is subscriber
    * letterIndex {number} - de plaats van de letter in het woord
    */
-  updateActiveRow(letterIndex: number) {
-    if (!this.guessedLetterIndexes.includes(letterIndex)) {
-      this.guessedLetterIndexes.push(letterIndex);
-    }
-    if (this.guessedLetterIndexes.length === this.getNumberOfCellsPerRow()) {
-      this.guessedLetterIndexes = [];
-      this.activeRow++;
-      this.rowSubject.next(this.activeRow);
+  checkGame(letterIndex: number, guessedLetter: string) {
+    console.log('this.guessedLetters:', this.guessedLetters);
+    this.guessedLetters[letterIndex] = guessedLetter;
+    // check: geen '' meer in this.guessedLetters
+    if (!this.guessedLetters.includes('')) {
+      if (this.guessedLetters.join('') === this.wordToGuess) {
+        this.gameOver = true;
+        this.guessResult = '';
+        this.rowSubject.next(-1);
+        alert('Je hebt het woord geraden!');
+      } else {
+        // alle letters ingevuld, woord niet geraden
+        this.guessedLetters = ['', '', '', '', ''];
+        this.rowSubject.next(++this.activeRow);
+      }
     }
   }
 
