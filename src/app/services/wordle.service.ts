@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class WordleService {
   activeRow = 0;
-  guessCount = 0;
+  guessedLetterIndexes: number[] = [];
   guessResult = '';
   numberOfCellsPerRow = 5;
   numberOfRows = 6;
@@ -46,18 +46,24 @@ export class WordleService {
         guessResult = 'goed';
       }
     }
-    this.updateActiveRow();
+    this.updateActiveRow(letterIndex);
 
     return guessResult;
   }
 
   /**
    * - description: voedt de BehaviourSubject met nieuwe waarde. Column component is subscriber
+   * letterIndex {number} - de plaats van de letter in het woord
    */
-  updateActiveRow() {
-    this.guessCount++;
-    this.activeRow = Math.floor(this.guessCount / this.numberOfCellsPerRow);
-    this.rowSubject.next(this.activeRow);
+  updateActiveRow(letterIndex: number) {
+    if (!this.guessedLetterIndexes.includes(letterIndex)) {
+      this.guessedLetterIndexes.push(letterIndex);
+    }
+    if (this.guessedLetterIndexes.length === this.getNumberOfCellsPerRow()) {
+      this.guessedLetterIndexes = [];
+      this.activeRow++;
+      this.rowSubject.next(this.activeRow);
+    }
   }
 
   /**
