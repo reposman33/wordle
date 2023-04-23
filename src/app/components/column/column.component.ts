@@ -12,6 +12,8 @@ export class ColumnComponent implements OnInit {
   constructor(private wordleService: WordleService) {}
 
   ngOnInit(): void {
-    this.activeRow = this.wordleService.getActiveRow();
+    this.wordleService.rowSubject.subscribe(
+      (activeRow) => (this.activeRow = activeRow)
+    );
   }
 }
