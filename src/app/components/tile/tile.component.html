@@ -1,3 +1,9 @@
 <div class="tile">
-  <input maxlength="1" type="text" class="input" />
+  <input
+    maxlength="1"
+    type="text"
+    #input
+    (keyup)="processInputValue(input.value)"
+    [ngClass]="['input', userGuess]"
+  />
 </div>

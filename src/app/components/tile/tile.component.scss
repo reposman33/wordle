@@ -20,6 +20,14 @@
     text-transform: capitalize;
     width: 3.5rem;
 
+    &.bijnaGoed {
+      background-color: cornflowerblue;
+    }
+
+    &.goed {
+      background-color: coral;
+    }
+
     &:hover {
       filter: brightness(75%);
     }
