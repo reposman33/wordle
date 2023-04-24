@@ -20,6 +20,6 @@ export class TileComponent {
    * @param userGuess {string} - door speler ingevoerde letter in tile
    */
   processInputValue(userGuess: string) {
-    this.userGuess = this.wordleService.checkUserGuess(userGuess, this.index);
+    this.userGuess = this.wordleService.checkGame(this.index, userGuess);
   }
 }

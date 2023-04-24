@@ -12,6 +12,7 @@ export class WordleService {
   numberOfCellsPerRow!: number;
   numberOfRows!: number;
   wordToGuess!: string;
+  shadowedWordToGuess!: string;
   words!: string[];
 
   rowSubject = new BehaviorSubject<number>(0);
@@ -43,27 +44,7 @@ export class WordleService {
     this.gameOver = false;
     this.numberOfCellsPerRow = 5;
     this.numberOfRows = 6;
-  }
-
-  /**
-   * description - check input - aangeroepen vanuit de Tile component
-   * @param guessedLetter {string} - de letter die de speler intypt
-   * @param letterIndex  {number} - de positie van de letter in het te raden woord
-   * @returns {string} - 'bijnaGoed' | 'goed' | '' resp letter komt voor in woord | op juiste plaats | komt niet voor
-   */
-
-  checkUserGuess(guessedLetter: string, letterIndex: number): string {
-    let guessResult = '';
-
-    if (this.wordToGuess.includes(guessedLetter)) {
-      guessResult = 'bijnaGoed';
-      if (this.wordToGuess[letterIndex] === guessedLetter) {
-        guessResult = 'goed';
-      }
-    }
-    this.checkGame(letterIndex, guessedLetter);
-
-    return guessResult;
+    this.shadowedWordToGuess = this.wordToGuess; // update elke keer als een letter wel in woord maar niet op goede plek
   }
 
   /**
@@ -71,21 +52,39 @@ export class WordleService {
    * letterIndex {number} - de plaats van de letter in het woord
    */
   checkGame(letterIndex: number, guessedLetter: string) {
-    console.log('this.guessedLetters:', this.guessedLetters);
+    let guessResult = '';
     this.guessedLetters[letterIndex] = guessedLetter;
-    // check: geen '' meer in this.guessedLetters
+    const guessedLetterindex = this.shadowedWordToGuess.indexOf(guessedLetter);
+
     if (!this.guessedLetters.includes('')) {
+      // alle tiles gevuld
       if (this.guessedLetters.join('') === this.wordToGuess) {
+        // woord geraden. Game over
         this.gameOver = true;
-        this.guessResult = '';
+        guessResult = 'goed';
         this.rowSubject.next(-1);
         alert('Je hebt het woord geraden!');
       } else {
-        // alle letters ingevuld, woord niet geraden
+        // woord niet geraden check letter
+        guessResult = guessedLetterindex > -1 ? 'bijnagoed' : '';
         this.guessedLetters = ['', '', '', '', ''];
         this.rowSubject.next(++this.activeRow);
       }
+    } else {
+      //  check of letter in woord
+      if (guessedLetterindex > -1) {
+        // letter in woord
+        this.shadowedWordToGuess = this.shadowedWordToGuess.replace(
+          guessedLetter,
+          ''
+        );
+        guessResult = 'bijnaGoed';
+        if (this.wordToGuess[letterIndex] === guessedLetter) {
+          guessResult = 'goed';
+        }
+      }
     }
+    return guessResult;
   }
 
   /**
